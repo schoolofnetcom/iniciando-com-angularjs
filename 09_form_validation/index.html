@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myPizza">
+<head>
+    <meta charset="UTF-8">
+    <title>My Pizza</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/angular.min.js"></script>
+    <script>
+
+        angular.module("myPizza",[]);
+        angular.module("myPizza").controller("myPizzaCtrl", function($scope){
+            $scope.name = "My Pizza";
+            $scope.clients = [
+                {name:"Peter",tel:"3245-4844",address:"3099 SW 5st Ave",order:"1 Pepperoni pizza"},
+                {name:"Jamie",tel:"9943-4567",address:"3054 SW 2st Ave",order:"2 Big 4/Cheese pizza"},
+                {name:"Oliver",tel:"9942-6789",address:"3018 SW 1st Ave",order:"1 Corn pizza"}
+            ];
+            $scope.add = function(client){
+                $scope.clients.push(angular.copy(client));
+                client.name = "";
+                client.tel = "";
+                client.address = "";
+                client.order = "";
+                $scope.formClient.$setPristine();
+            };
+            $scope.edit = function(client){
+                $scope.client = client;
+                $scope.editing = true;
+            };
+            $scope.save = function(client){
+                $scope.client = angular.copy(client);
+                $scope.editing = false;
+                $scope.formClient.$setPristine();
+                delete client;
+            };
+            $scope.destroy = function(client){
+                $scope.clients.splice($scope.clients.indexOf(client), 1);
+            };
+        });
+
+    </script>
+</head>
+<body>
+<section class="container" ng-controller="myPizzaCtrl">
+    <div class="row">
+        <h1 class="text-center" ng-bind="name"></h1>
+    </div>
+    <div class="row">
+        <div class="form-inline text-center">
+            <div class="form-group pull-left">
+                <input type="search" ng-model="search" class="form-control" placeholder="Search">
+            </div>
+
+            <form name="formClient">
+                <div ng-class="{'has-error' : formClient.nameClient.$invalid && formClient.$dirty, 'has-success' :formClient.nameClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="nameClient" required="true" ng-model="client.name" placeholder="Name">
+
+                </div>
+                <div ng-class="{ 'has-error' : formClient.telClient.$invalid && formClient.$dirty, 'has-success' :formClient.telClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="telClient" required="true" ng-pattern="/^\d{4,5}-\d{4}$/" ng-model="client.tel" placeholder="Telephone: ####-####">
+
+                </div>
+                <div ng-class="{ 'has-error form-group' : formClient.addressClient.$invalid && formClient.$dirty, 'form-group has-success' :formClient.addressClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="addressClient" ng-required="true" ng-model="client.address" placeholder="Address">
+
+                </div>
+                <div ng-class="{ 'has-error  form-group' : formClient.orderClient.$invalid && formClient.$dirty, 'form-group has-success' :formClient.orderClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="orderClient" ng-required="true" ng-model="client.order" placeholder="Order">
+
+                </div>
+
+                <div class="form-group">
+                    <button ng-hide="editing" ng-click="add(client);" ng-disabled="formClient.$invalid" class="btn btn-success">Add</button>
+                    <button ng-show="editing" ng-click="save();" ng-disabled="formClient.$invalid" class="btn btn-info">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Tel</th>
+                <th>Address</th>
+                <th>Order</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="client in clients | filter:search">
+                <td>{{client.name}}</td>
+                <td>{{client.tel}}</td>
+                <td>{{client.address}}</td>
+                <td>{{client.order}}</td>
+                <td>
+                    <button ng-click="edit(client);" class="btn btn-default">Edit</button>
+                    <button ng-click="destroy(client);" class="btn btn-danger">Destroy</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+</body>
+</html>

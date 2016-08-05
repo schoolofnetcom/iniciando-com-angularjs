@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myPizza">
+<head>
+    <meta charset="UTF-8">
+    <title>My Pizza</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/angular.min.js"></script>
+    <script>
+
+        angular.module("myPizza",[]);
+        angular.module("myPizza").controller("myPizzaCtrl", function($scope,$http){
+            $scope.name = "My Pizza";
+            $scope.clients = [];
+
+            var listClient = function(){
+                $http.get('http://localhost:8080/post.php').success(function(data,status){
+                    console.log(data);
+                    $scope.clients = data;
+                });
+            };
+
+            var addClient = function(client){
+                $http.post('http://localhost:8080/post.php',client  ).success(function(ret){
+                    console.log(ret);
+                    listClient();
+                });
+            };
+
+            listClient();
+
+            $scope.add = function(client){
+                //$scope.clients.push(angular.copy(client));
+                addClient(angular.copy(client));
+                client.name = "";
+                client.tel = "";
+                client.address = "";
+                client.order = "";
+                $scope.formClient.$setPristine();
+            };
+            $scope.edit = function(client){
+                $scope.client = client;
+                $scope.editing = true;
+            };
+            $scope.save = function(client){
+                //$scope.client = angular.copy($scope.client);
+                addClient(angular.copy($scope.client));
+                $scope.editing = false;
+                $scope.formClient.$setPristine();
+                delete $scope.client ;
+            };
+            $scope.destroy = function(client){
+                $scope.clients.splice($scope.clients.indexOf(client), 1);
+            };
+
+            $scope.orderBy = function(col){
+                if($scope.asc){
+                    $scope.orderby = col;
+                    $scope.asc = false;
+                }else{
+                    $scope.orderby = col;
+                    $scope.asc = "reverse";
+                }
+
+            };
+        });
+
+    </script>
+</head>
+<body>
+<section class="container" ng-controller="myPizzaCtrl">
+    <div class="row">
+        <h1 class="text-center" ng-bind="name"></h1>
+    </div>
+    <div class="row">
+        <div class="form-inline text-center">
+            <div class="form-group pull-left">
+                <input type="search" ng-model="search" class="form-control" placeholder="Search">
+            </div>
+
+            <form name="formClient">
+                <div ng-class="{'has-error' : formClient.nameClient.$invalid && formClient.$dirty, 'has-success' :formClient.nameClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="nameClient" required="true" ng-model="client.name" placeholder="Name">
+                </div>
+                <div ng-class="{ 'has-error' : formClient.telClient.$invalid && formClient.$dirty, 'has-success' :formClient.telClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="telClient" ng-required="true" ng-model="client.tel" placeholder="Telephone">
+
+                </div>
+                <div ng-class="{ 'has-error form-group' : formClient.addressClient.$invalid && formClient.$dirty, 'form-group has-success' :formClient.addressClient.$valid, 'form-group' : true}">
+                    <input type="text" class="form-control" name="addressClient" ng-required="true" ng-model="client.address" placeholder="Address">
+
+                </div>
+
+                <div class="form-group">
+                    <button ng-hide="editing" ng-click="add(client);" ng-disabled="formClient.$invalid" class="btn btn-success">Add</button>
+                    <button ng-show="editing" ng-click="save();" ng-disabled="formClient.$invalid" class="btn btn-info">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th ng-click="orderBy('name');" style="cursor:pointer;">Name</th>
+                <th ng-click="orderBy('tel');" style="cursor:pointer;">Tel</th>
+                <th ng-click="orderBy('address');" style="cursor:pointer;">Address</th>
+                <th ng-click="orderBy('order');" style="cursor:pointer;">Order</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="client in clients | filter:search | orderBy:orderby:asc">
+                <td>{{client.name}}</td>
+                <td>{{client.tel}}</td>
+                <td>{{client.address}}</td>
+                <td>{{client.order}}</td>
+                <td>
+                    <button ng-click="edit(client);" class="btn btn-default">Edit</button>
+                    <button ng-click="destroy(client);" class="btn btn-danger">Destroy</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+</body>
+</html>

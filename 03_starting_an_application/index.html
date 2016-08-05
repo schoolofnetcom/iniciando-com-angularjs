@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myPizza">
+<head>
+    <meta charset="UTF-8">
+    <title>My Pizza</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/angular.min.js"></script>
+    <script>
+
+        angular.module("myPizza",[]);
+        angular.module("myPizza").controller("myPizzaCtrl", function($scope){
+            $scope.name = "My Pizza";
+        });
+
+    </script>
+</head>
+<body>
+<section class="container" ng-controller="myPizzaCtrl">
+    <div class="row">
+        <h1 class="text-center" ng-bind="name"></h1>
+    </div>
+
+</section>
+
+</body>
+</html>

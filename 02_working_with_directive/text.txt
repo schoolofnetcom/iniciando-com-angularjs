@@ -1,0 +1,1 @@
+Diretivas são extenções da linguagem HTML que permitem a implementação de novos comportmentos, de forma declarativa.

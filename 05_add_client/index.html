@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myPizza">
+<head>
+    <meta charset="UTF-8">
+    <title>My Pizza</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/angular.min.js"></script>
+    <script>
+
+        angular.module("myPizza",[]);
+        angular.module("myPizza").controller("myPizzaCtrl", function($scope){
+            $scope.name = "My Pizza";
+            $scope.clients = [
+                {name:"Peter",tel:"99454323",address:"3099 SW 5st Ave",order:"1 Pepperoni pizza"},
+                {name:"Jamie",tel:"99454319",address:"3054 SW 2st Ave",order:"2 Big 4/Cheese pizza"},
+                {name:"Oliver",tel:"99454365",address:"3018 SW 1st Ave",order:"1 Corn pizza"}
+            ];
+            $scope.add = function(client){
+                $scope.clients.push(angular.copy(client));
+                client.name = "";
+                client.tel = "";
+                client.address = "";
+                client.order = "";
+            };
+        });
+
+    </script>
+</head>
+<body>
+<section class="container" ng-controller="myPizzaCtrl">
+    <div class="row">
+        <h1 class="text-center" ng-bind="name"></h1>
+    </div>
+    <div class="row">
+        <div class="form-inline text-center">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="client.name" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="client.tel" placeholder="Telephone">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="client.address" placeholder="Address">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="client.order" placeholder="Order">
+            </div>
+            <div class="form-group">
+                <button ng-click="add(client);" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Tel</th>
+                <th>Address</th>
+                <th>Order</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="client in clients">
+                <td>{{client.name}}</td>
+                <td>{{client.tel}}</td>
+                <td>{{client.address}}</td>
+                <td>{{client.order}}</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+</body>
+</html>

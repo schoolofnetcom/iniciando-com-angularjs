@@ -1,0 +1,2 @@
+ Vamos iniciar a contrução de uma aplicação com essas diretivas que aprendemos e vamos ver
+ como podemos criar um crud bem básico com Angular JS.
